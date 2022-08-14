@@ -2,22 +2,21 @@
 	import { onMount, tick } from 'svelte';
 	import * as Tone from 'tone';
 	import type { Frequency } from 'tone/build/esm/core/type/Units';
-  import type { Noise } from 'tone';
+	import type { Noise } from 'tone';
+  import { fade } from 'svelte/transition';
 
 	// Variables
 	export let data: String;
 	let button: HTMLElement;
+	let started: Boolean = false;
 
 	let keys: Array<Frequency | Array<Frequency>> = [];
 
 	// Test sequence
-	keys = ['D4', 'A#4', 'A4', 'F4', null, 'G4', null];
-
-	let points: Array<number> = [];
+	keys = ['D3', 'A#3', 'A3', 'F3', null, 'G3', null];
 
 	// const precipitation = data.PrecipitationSummary.Precipitation.Metric.Value;
 	const precipitation: number = 0.1;
-	console.log(precipitation);
 
 	const windSpeed: number = data.Wind.Speed.Imperial.Value || 0;
 
@@ -34,18 +33,35 @@
 
 	const wind = () => {
 		const noise: Noise = new Tone.Noise('white').start();
-    noise.volume.value = -10;
+		noise.volume.value = -10;
 		// make an autofilter to shape the noise
 		const autoFilter = new Tone.AutoFilter({
 			frequency: 0.05,
-			baseFrequency: (windSpeed * 10),
-			octaves: 2,
-		})
-			.toDestination()
+			baseFrequency: windSpeed * 10,
+			octaves: 2
+		}).toDestination();
 		// connect the noise
 		noise.connect(autoFilter);
 		// start the autofilter LFO
 		autoFilter.start();
+	};
+
+	const fieldRecording = () => {
+		const reverb = new Tone.JCReverb(0.1).toDestination();
+		const delay = new Tone.FeedbackDelay(0.6, 0.5);
+
+		const player = new Tone.Player('/samples/summer/park.mp3', () => {
+			player.start();
+		}).chain(delay, reverb);
+
+		player.volume.value = 12;
+		player.fadeIn = 4;
+
+		player.onstop = () => {
+			setTimeout(() => {
+				player.start();
+			}, 4000);
+		};
 	};
 
 	const lead = () => {
@@ -63,7 +79,7 @@
 				sustain: 1,
 				release: 8
 			},
-			volume: -17
+			volume: -15
 		}).chain(delay, reverb, autoFilter);
 
 		const sequence = new Tone.Sequence((time, note: Frequency) => {
@@ -72,24 +88,34 @@
 
 		sequence.start(0);
 		sequence.humanize = false;
-
-		Tone.Transport.start();
 	};
 
 	// ToneJS Audio
 	const init = async () => {
 		pad();
 		wind();
-    lead();
+		fieldRecording();
+		lead();
+
+		Tone.Transport.start();
 	};
 
 	onMount(() => {
 		button.addEventListener('click', async () => {
 			await Tone.start();
 			init();
-			button.style.display = 'none';
+			started = true;
 		});
 	});
 </script>
 
-<button class="fixed inset-0 bg-white" bind:this={button}> Enable Audio </button>
+{#if !started}
+  <div transition:fade class="fixed inset-0 bg-black bg-opacity-50 grid place-content-center">
+    <button
+      class="bg-slate-800 px-8 py-4 border border-slate-500 rounded-sm text-white text-xl"
+      bind:this={button}
+    >
+      Enable Audio
+    </button>
+  </div>
+{/if}

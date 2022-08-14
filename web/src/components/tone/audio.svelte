@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-import type { Noise } from 'tone';
-
 	import * as Tone from 'tone';
 	import type { Frequency } from 'tone/build/esm/core/type/Units';
+  import type { Noise } from 'tone';
 
 	// Variables
 	export let data: String;
@@ -52,7 +51,7 @@ import type { Noise } from 'tone';
 	const lead = () => {
 		const autoFilter = new Tone.AutoFilter('0n').toDestination().start();
 		const reverb = new Tone.JCReverb(0.1);
-		const delay = new Tone.FeedbackDelay(0.4, 0.95);
+		const delay = new Tone.FeedbackDelay(0.6, 0.93);
 
 		const melody = new Tone.Synth({
 			oscillator: {
@@ -64,7 +63,7 @@ import type { Noise } from 'tone';
 				sustain: 1,
 				release: 8
 			},
-			volume: -15
+			volume: -17
 		}).chain(delay, reverb, autoFilter);
 
 		const sequence = new Tone.Sequence((time, note: Frequency) => {

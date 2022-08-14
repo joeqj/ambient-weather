@@ -1,4 +1,4 @@
-import json from '../../static/data.json';
+import json from '../../static/night-partly-cloudy.json';
 
 export async function GET() {
 	if (json) {

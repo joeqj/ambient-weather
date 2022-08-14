@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import Audio from "../components/tone/audio.svelte";
+
+	export let data: JSON;
+	
+</script>
+
+<section class="w-full h-screen grid place-content-center">
+	<h1 class="text-4xl font-bold">Ambient Weather</h1>
+</section>
+
+<Audio data={data} />

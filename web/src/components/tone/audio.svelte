@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import * as Tone from 'tone';
 	import type { Frequency } from 'tone/build/esm/core/type/Units';
 	import type { Noise } from 'tone';
-  import { fade } from 'svelte/transition';
+
+	import { scaleGenerator } from '../../util/audio/scales';
+	import { getMultipleRandom, shuffleArray } from '../../util/helpers/array';
 
 	// Variables
 	export let data: String;
@@ -11,14 +14,33 @@
 	let started: Boolean = false;
 
 	let keys: Array<Frequency | Array<Frequency>> = [];
+	let padKeys: Array<Frequency> = [];
+
+	// const leadSpeed: Number = 18;
+	const leadSpeed: Number = 2;
 
 	// Test sequence
-	keys = ['D3', 'A#3', 'A3', 'F3', null, 'G3', null];
+	// F melodic minor
+	// padKeys = ['F4', 'G4', 'C4'];
+	// keys = ['D3', 'A#3', 'A3', 'F3', null, 'G3', null];
+
+	// A major
+	// padKeys = ['A4', 'F#4', 'D4'];
+	// keys = ['D3', 'B3', 'C#4', 'E3', null, 'A3'];
+
+	const scale = new scaleGenerator({ key: 'G', mode: 'melodic' });
+	
+	const leadNotes = getMultipleRandom(scale.notes, 5);	
+
+	padKeys = scale.chord.notes.map(x => x.note + (x.rel_octave + 4));	
+	keys = shuffleArray(leadNotes.map(x => x.note + 4));
+	
 
 	// const precipitation = data.PrecipitationSummary.Precipitation.Metric.Value;
 	const precipitation: number = 0.1;
 
-	const windSpeed: number = data.Wind.Speed.Imperial.Value || 0;
+	// const windSpeed: number = data.Wind.Speed.Imperial.Value || 0;
+	const windSpeed: number = 19;
 
 	const pad = () => {
 		const freeverb = new Tone.Freeverb({
@@ -28,7 +50,7 @@
 
 		const synth = new Tone.PolySynth().connect(freeverb);
 		synth.set({ detune: -500 });
-		synth.triggerAttackRelease(['F4', 'G4', 'C4'], Infinity);
+		synth.triggerAttackRelease(padKeys, Infinity);
 	};
 
 	const wind = () => {
@@ -39,9 +61,13 @@
 			frequency: 0.05,
 			baseFrequency: windSpeed * 10,
 			octaves: 2
-		}).toDestination();
+		});
+
+		const autoPanner = new Tone.AutoPanner(0.1).start().toDestination();
+		autoPanner.depth.value = 0.75;
+
 		// connect the noise
-		noise.connect(autoFilter);
+		noise.chain(autoFilter, autoPanner);
 		// start the autofilter LFO
 		autoFilter.start();
 	};
@@ -54,7 +80,7 @@
 			player.start();
 		}).chain(delay, reverb);
 
-		player.volume.value = 12;
+		player.volume.value = 6;
 		player.fadeIn = 4;
 
 		player.onstop = () => {
@@ -71,19 +97,20 @@
 
 		const melody = new Tone.Synth({
 			oscillator: {
-				type: 'fmtriangle2'
+				type: 'amsawtooth' // fmtriangle2
 			},
+
 			envelope: {
 				attack: 10,
 				decay: 2,
 				sustain: 1,
 				release: 8
 			},
-			volume: -15
+			volume: -25
 		}).chain(delay, reverb, autoFilter);
 
 		const sequence = new Tone.Sequence((time, note: Frequency) => {
-			melody.triggerAttackRelease(note, 2.5, time * 18);
+			melody.triggerAttackRelease(note, 2.5, time * leadSpeed);
 		}, keys);
 
 		sequence.start(0);
@@ -92,9 +119,9 @@
 
 	// ToneJS Audio
 	const init = async () => {
-		pad();
 		wind();
-		fieldRecording();
+		// fieldRecording();
+		pad();
 		lead();
 
 		Tone.Transport.start();

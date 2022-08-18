@@ -16,24 +16,17 @@
 	let keys: Array<Frequency | Array<Frequency>> = [];
 	let padKeys: Array<Frequency> = [];
 
-	// const leadSpeed: Number = 18;
-	const leadSpeed: Number = 2;
+	/* 
+		For testing purposes only
+	*/
+	const leadSpeed: Number = 18;
 
-	// Test sequence
-	// F melodic minor
-	// padKeys = ['F4', 'G4', 'C4'];
-	// keys = ['D3', 'A#3', 'A3', 'F3', null, 'G3', null];
-
-	// A major
-	// padKeys = ['A4', 'F#4', 'D4'];
-	// keys = ['D3', 'B3', 'C#4', 'E3', null, 'A3'];
-
-	const scale = new scaleGenerator({ key: 'G', mode: 'melodic' });
+	const scale = new scaleGenerator({ key: 'E', mode: 'phrygian' });	
 	
-	const leadNotes = getMultipleRandom(scale.notes, 5);	
+	const leadNotes = getMultipleRandom(scale.notes, 5);
 
 	padKeys = scale.chord.notes.map(x => x.note + (x.rel_octave + 4));	
-	keys = shuffleArray(leadNotes.map(x => x.note + 4));
+	keys = shuffleArray(leadNotes.map(x => x.note + (x.rel_octave + 3)));
 	
 
 	// const precipitation = data.PrecipitationSummary.Precipitation.Metric.Value;
@@ -97,7 +90,7 @@
 
 		const melody = new Tone.Synth({
 			oscillator: {
-				type: 'amsawtooth' // fmtriangle2
+				type: 'fmtriangle2' // fmtriangle2
 			},
 
 			envelope: {

@@ -53,7 +53,7 @@ class scaleGenerator {
 	key: string = '';
 	mode: string = '';
 	notes: object[] = [];
-  chord: string[] = [];
+  	chord: string[] = [];
 
 	constructor(params: parameters) {
 		this.dict = this.loadDictionary();

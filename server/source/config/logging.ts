@@ -14,7 +14,7 @@ const warn = (namespace: string, message: string, object?: any) => {
   if (object) {
     console.warn(`[${getTimeStamp()}] [WARN] [${namespace}] ${message}`, object);
   } else {
-    console.warm(`[${getTimeStamp()}] [WARN] [${namespace}] ${message}`);
+    console.warn(`[${getTimeStamp()}] [WARN] [${namespace}] ${message}`);
   }
 }
 const error = (namespace: string, message: string, object?: any) => {
@@ -30,4 +30,11 @@ const debug = (namespace: string, message: string, object?: any) => {
   } else {
     console.debug(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`);
   }
+}
+
+export {
+  info,
+  warn,
+  error,
+  debug
 }

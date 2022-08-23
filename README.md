@@ -9,3 +9,10 @@ cd web
 npm install
 npm run dev
 ```
+
+## Back end
+```bash
+cd server
+npm install
+npm run start
+```

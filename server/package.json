@@ -4,6 +4,7 @@
   "description": "Regularly fetch and store weather data from accuweather",
   "main": "source/server.ts",
   "scripts": {
+    "start": "nodemon source/server.ts",
     "build": "rm -rf dist/ && prettier --write source/ && tsc"
   },
   "author": "joeqj",

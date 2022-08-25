@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import logging from './config/logging';
 import config from './config/config';
+import weatherRoute from './routes/weather';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -45,6 +46,7 @@ router.use((req, res, next) => {
 });
 
 /* Routes */
+router.use('/weather', weatherRoute);
 
 /* Error Handling */
 router.use((req, res, next) => {

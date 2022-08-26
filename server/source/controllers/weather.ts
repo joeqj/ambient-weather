@@ -1,8 +1,29 @@
 import { NextFunction, Request, Response } from "express";
 import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
+import { FetchWeather } from "../config/accuweather";
 
 const NAMESPACE = 'Weather';
+
+const getWeather = (req: Request, res: Response, next: NextFunction) => {
+  logging.info(NAMESPACE, 'Fetching weather from Accuweather');
+
+  FetchWeather()
+    .then(result => {
+      
+      return res.status(200).json({
+        result
+      })
+    })
+    .catch(error => {
+      logging.error(NAMESPACE, error.message, error);
+    
+      return res.status(500).json({ 
+        status: error.status,
+        error
+      })
+    })
+}
 
 const createRecord = (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Getting all records');
@@ -86,4 +107,4 @@ const getAllRecords = (req: Request, res: Response, next: NextFunction) => {
     })
 };
 
-export default { createRecord, getAllRecords }
+export default { getWeather, createRecord, getAllRecords }

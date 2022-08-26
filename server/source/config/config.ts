@@ -24,9 +24,20 @@ const SERVER = {
   port: SERVER_PORT
 }
 
+const ACCUWEATHER_APIKEY = process.env.ACCUWEATHER_APIKEY || '';
+const ACCUWEATHER_LOCATION = process.env.ACCUWEATHER_LOCATION || '712327'; // Leeds, UK by default
+const ACCUWEATHER_LANGUAGE = process.env.ACCUWEATHER_LANGUAGE || 'en-GB'; // English by default
+
+const ACCUWEATHER = {
+  apiKey: ACCUWEATHER_APIKEY,
+  location: ACCUWEATHER_LOCATION,
+  language: ACCUWEATHER_LANGUAGE
+}
+
 const config = {
   mysql: MYSQL,
   server: SERVER,
+  accuweather: ACCUWEATHER
 }
 
 export default config;

@@ -25,48 +25,6 @@ const getWeather = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
-const createRecord = (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Getting all records');
-
-  const { id } = req.body;
-
-  const query = `INSERT INTO weather (id) VALUES ("${id}")`;
-
-  Connect()
-    .then(connection => {
-      // Connection has been made, perform query
-      Query(connection, query)
-        .then(result => {
-          // Query successful, return response
-          return res.status(200).json({
-            result
-          })
-        })
-        .catch(error => {
-          // Error while performing query
-          logging.error(NAMESPACE, error.message, error);
-    
-          return res.status(500).json({ 
-            message: error.message,
-            error
-          })
-        })
-        .finally(() => {
-          // Close mysql connection
-          connection.end();
-        })
-    })
-    .catch(error => {
-      // Error while connecting to database
-      logging.error(NAMESPACE, error.message, error);
-
-      return res.status(500).json({ 
-        message: error.message,
-        error
-      })
-    })
-};
-
 const getAllRecords = (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Getting all records');
 
@@ -107,4 +65,4 @@ const getAllRecords = (req: Request, res: Response, next: NextFunction) => {
     })
 };
 
-export default { getWeather, createRecord, getAllRecords }
+export default { getWeather, getAllRecords }

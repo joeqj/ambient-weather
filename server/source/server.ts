@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import logging from './config/logging';
 import config from './config/config';
 import weatherRoute from './routes/weather';
+import { storeData } from './services/storeData';
 
 const NAMESPACE = 'Server';
 const router = express();
@@ -56,6 +57,9 @@ router.use((req, res, next) => {
     message: error.message
   });
 });
+
+/* Daily Job */
+storeData();
 
 /* Create server */
 const httpServer = http.createServer(router);

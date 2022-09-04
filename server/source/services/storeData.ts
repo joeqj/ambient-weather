@@ -1,24 +1,34 @@
 import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
 import { FetchWeather } from "../config/accuweather";
-import { Convert } from '../types/report';
-import { mapResponse } from '../utilities/parseData';
+import { mapResponse } from '../utilities/mapResponse';
+import { Convert } from '../types/weatherResponse';
+import { WeatherObject } from "../types/weatherObject";
+import { OkPacket } from "mysql";
 
-const NAMESPACE = 'Utilities';
+const NAMESPACE = 'Store Data';
 
 const createRecord = (data: any) => {
-  logging.info(NAMESPACE, 'Getting all records');
+  const columns = Object.keys(data);
+  // Comma seperated values: "value", "another", "etc"
+  const values = Object.values(data).map(v => `'${v}'`).join(',');
 
-  const { id } = data;
-
-  const query = `INSERT INTO weather (id) VALUES ("${id}")`;
+  const query = `INSERT INTO weather (${columns}) VALUES (${values})`;
 
   Connect()
     .then(connection => {
       // Connection has been made, perform query
       Query(connection, query)
         .then(result => {
-          // Query successful, return response
+          // Query successful, return responses
+          const response: OkPacket = <OkPacket>result;
+
+          if (!response.warningCount) {
+            // If no errors
+            logging.info(NAMESPACE, 'Created SQL record succesfull, affected rows: ' + response.affectedRows);
+          }
+          // console.log(result);
+          
           return result;
         })
         .catch(error => {
@@ -49,13 +59,13 @@ const createRecord = (data: any) => {
 const storeData = () => {
   FetchWeather()
   .then(result => {
+
+    // Cast JSON response to WeatherObj interface
+    const weatherResponse = Convert.toWeatherResponse(JSON.stringify(result));
+    const parsed: WeatherObject = mapResponse(weatherResponse);
     
-    const weatherResponse = Convert.toWeatherReport(JSON.stringify(result));
-    const parsed = mapResponse(weatherResponse);
-   
-    // createRecord(parsed);
-    
-    
+    // Send data to our db
+    createRecord(parsed);
     return
   })
   .catch(error => {

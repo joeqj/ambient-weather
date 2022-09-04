@@ -1,39 +1,4 @@
-// To parse this data:
-//
-//   import { Convert } from "./file";
-//
-//   const weatherReport = Convert.toWeatherReport(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
-
-export interface WeatherObj {
-  localObservationDateTime: Date;
-  weatherText: string;
-  weatherIcon: number;
-  hasPrecipitation: boolean;
-  precipitationType: string|null;
-  isDayTime: boolean;
-  temperature: number;
-  relativeHumidity: number;
-  wind: {
-    direction: string,
-    speed: number
-  };
-  visibility: number;
-  cloudCover: number;
-  precipitationSummary: {
-    pastHour: number,
-    past12Hours: number,
-  };
-  temperatureSummary: {
-    minimum: number,
-    maximum: number
-  };
-
-}
-
-export interface WeatherReport {
+export interface WeatherResponse {
   LocalObservationDateTime: Date;
   EpochTime: number;
   WeatherText: string;
@@ -114,12 +79,12 @@ export interface WindGust {
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
-  public static toWeatherReport(json: string): WeatherReport[] {
-    return cast(JSON.parse(json), a(r('WeatherReport')));
+  public static toWeatherResponse(json: string): WeatherResponse[] {
+    return cast(JSON.parse(json), a(r('WeatherResponse')));
   }
 
-  public static weatherReportToJson(value: WeatherReport[]): string {
-    return JSON.stringify(uncast(value, a(r('WeatherReport'))), null, 2);
+  public static WeatherResponseToJson(value: WeatherResponse[]): string {
+    return JSON.stringify(uncast(value, a(r('WeatherResponse'))), null, 2);
   }
 }
 
@@ -259,7 +224,7 @@ function r(name: string) {
 }
 
 const typeMap: any = {
-  WeatherReport: o(
+  WeatherResponse: o(
     [
       { json: 'LocalObservationDateTime', js: 'LocalObservationDateTime', typ: Date },
       { json: 'EpochTime', js: 'EpochTime', typ: 0 },

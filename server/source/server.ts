@@ -59,7 +59,7 @@ router.use((req, res, next) => {
 });
 
 /* Daily Job */
-storeData();
+// storeData();
 
 /* Create server */
 const httpServer = http.createServer(router);

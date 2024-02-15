@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
-import { FetchWeather } from "../config/accuweather";
+import { FetchWeather } from "../config/openweather";
 
 const NAMESPACE = 'Weather';
 
 const getWeather = (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Fetching weather from Accuweather');
+  logging.info(NAMESPACE, 'Fetching weather from Openweather');
 
   FetchWeather()
-    .then(result => {
-      
+    .then(result => { 
       return res.status(200).json({
         result
       })

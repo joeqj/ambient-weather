@@ -1,0 +1,43 @@
+{
+	"coord": {
+		"lon": -1.5866,
+		"lat": 53.8092
+	},
+	"weather": [
+		{
+			"id": 802,
+			"main": "Clouds",
+			"description": "scattered clouds",
+			"icon": "03n"
+		}
+	],
+	"base": "stations",
+	"main": {
+		"temp": 13.64,
+		"feels_like": 13.28,
+		"temp_min": 12.03,
+		"temp_max": 14.5,
+		"pressure": 1001,
+		"humidity": 85
+	},
+	"visibility": 10000,
+	"wind": {
+		"speed": 4.63,
+		"deg": 220
+	},
+	"clouds": {
+		"all": 40
+	},
+	"dt": 1708027275,
+	"sys": {
+		"type": 2,
+		"id": 2041378,
+		"country": "GB",
+		"sunrise": 1707982041,
+		"sunset": 1708017234
+	},
+	"timezone": 0,
+	"id": 2645228,
+	"name": "Kirkstall",
+	"cod": 200
+}

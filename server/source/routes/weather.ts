@@ -4,7 +4,9 @@ import controller from '../controllers/weather';
 const router = express.Router();
 
 // router.post('/create/record', controller.createRecord);
-router.get('/fetch/accuweather', controller.getWeather);
-router.get('/get/weather', controller.getAllRecords);
+router.get('/get', controller.getAllRecords);
+
+// Debugging purposes - get live data from OpenWeather
+router.get('/live', controller.getWeather);
 
 export = router;

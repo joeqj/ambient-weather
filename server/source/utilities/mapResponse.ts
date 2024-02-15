@@ -1,28 +1,20 @@
-import { WeatherResponse } from "../types/weatherResponse";
-import { WeatherObject } from "../types/weatherObject";
+import { Weather } from "../types/weatherResponse";
+import { WeatherParsed } from "../types/weatherParsed";
 
-const mapResponse = (data: WeatherResponse[]) => {
-  const report: WeatherResponse = data[0];
-  const parsed: WeatherObject = {
-    localObservationDateTime: report.LocalObservationDateTime,
-    weatherText: report.WeatherText,
-    weatherIcon: report.WeatherIcon,
-    hasPrecipitation: report.HasPrecipitation ? 1 : 0,
-    precipitationType: report.PrecipitationType,
-    isDayTime: report.IsDayTime ? 1 : 0,
-    temperature: report.Temperature.Metric.Value,
-    relativeHumidity: report.RelativeHumidity,
-    windDirection: report.Wind.Direction.English,
-    windSpeed: report.Wind.Speed.Metric.Value,
-    visibility: report.Visibility.Metric.Value,
-    cloudCover: report.CloudCover,
-    precipitationPastHour: report.PrecipitationSummary.PastHour.Metric.Value,
-    precipitationPast12Hours: report.PrecipitationSummary.Past12Hours.Metric.Value,
-    temperaturePast12HoursMin: report.TemperatureSummary.Past12HourRange.Minimum.Metric.Value,
-    temperaturePast12HoursMax: report.TemperatureSummary.Past12HourRange.Maximum.Metric.Value
-  }
-
-  return parsed;
+const mapResponse = (data: Weather) => {
+  return {
+		text: data.weather[0].main,
+		description: data.weather[0].description,
+		temperature: data.main.temp,
+		pressure: data.main.pressure,
+		humidity: data.main.humidity,
+		visibility: data.visibility,
+		windSpeed: data.wind.speed,
+		windDirection: data.wind.deg,
+		cloudCoverage: data.clouds.all,
+		sunrise: data.sys.sunrise,
+		sunset: data.sys.sunset,
+  } as WeatherParsed;
 };
 
 export {

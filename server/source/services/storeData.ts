@@ -1,9 +1,9 @@
 import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
-import { FetchWeather } from "../config/accuweather";
+import { FetchWeather } from "../config/openweather";
 import { mapResponse } from '../utilities/mapResponse';
 import { Convert } from '../types/weatherResponse';
-import { WeatherObject } from "../types/weatherObject";
+import { WeatherObject } from "../types/weatherParsed";
 import { OkPacket } from "mysql";
 
 const NAMESPACE = 'Store Data';

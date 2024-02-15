@@ -24,20 +24,21 @@ const SERVER = {
   port: SERVER_PORT
 }
 
-const ACCUWEATHER_APIKEY = process.env.ACCUWEATHER_APIKEY || '';
-const ACCUWEATHER_LOCATION = process.env.ACCUWEATHER_LOCATION || '712327'; // Leeds, UK by default
-const ACCUWEATHER_LANGUAGE = process.env.ACCUWEATHER_LANGUAGE || 'en-GB'; // English by default
+const OPENWEATHER_APIKEY = process.env.OPENWEATHER_APIKEY || '';
+const OPENWEATHER_LOCATION = 
+  process.env.OPENWEATHER_LOCATION || '53.809232939773125,-1.5866067767162606'; // Leeds, UK by default
+const OPENWEATHER_UNITS = process.env.OPENWEATHER_LANGUAGE || 'metric';
 
-const ACCUWEATHER = {
-  apiKey: ACCUWEATHER_APIKEY,
-  location: ACCUWEATHER_LOCATION,
-  language: ACCUWEATHER_LANGUAGE
+const OPENWEATHER = {
+  apiKey: OPENWEATHER_APIKEY,
+  location: OPENWEATHER_LOCATION,
+  units: OPENWEATHER_UNITS
 }
 
 const config = {
   mysql: MYSQL,
   server: SERVER,
-  accuweather: ACCUWEATHER
+  openweather: OPENWEATHER
 }
 
 export default config;

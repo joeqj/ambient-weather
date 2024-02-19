@@ -1,15 +1,13 @@
-/* 
-  File generated with https://app.quicktype.io/
+// File generated with https://app.quicktype.io/
 
-  To parse this data:
-
-  import { Convert, Weather } from "./file";
-
-  const weather = Convert.toWeather(json);
-
-  These functions will throw an error if the JSON doesn't
-  match the expected interface, even if the JSON is valid.
-*/
+// To parse this data:
+//
+//   import { Convert, Weather } from "./file";
+//
+//   const weather = Convert.toWeather(json);
+//
+// These functions will throw an error if the JSON doesn't
+// match the expected interface, even if the JSON is valid.
 
 export interface Weather {
   coord:      Coord;
@@ -18,6 +16,7 @@ export interface Weather {
   main:       Main;
   visibility: number;
   wind:       Wind;
+  rain:       Rain;
   clouds:     Clouds;
   dt:         number;
   sys:        Sys;
@@ -43,6 +42,10 @@ export interface Main {
   temp_max:   number;
   pressure:   number;
   humidity:   number;
+}
+
+export interface Rain {
+  "1h": number;
 }
 
 export interface Sys {
@@ -237,6 +240,7 @@ const typeMap: any = {
       { json: "main", js: "main", typ: r("Main") },
       { json: "visibility", js: "visibility", typ: 0 },
       { json: "wind", js: "wind", typ: r("Wind") },
+      { json: "rain", js: "rain", typ: r("Rain") },
       { json: "clouds", js: "clouds", typ: r("Clouds") },
       { json: "dt", js: "dt", typ: 0 },
       { json: "sys", js: "sys", typ: r("Sys") },
@@ -259,6 +263,9 @@ const typeMap: any = {
       { json: "temp_max", js: "temp_max", typ: 3.14 },
       { json: "pressure", js: "pressure", typ: 0 },
       { json: "humidity", js: "humidity", typ: 0 },
+  ], false),
+  "Rain": o([
+      { json: "1h", js: "1h", typ: 3.14 },
   ], false),
   "Sys": o([
       { json: "type", js: "type", typ: 0 },

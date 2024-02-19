@@ -11,6 +11,7 @@ const mapResponse = (data: Weather) => {
 		visibility: data.visibility,
 		windSpeed: data.wind.speed,
 		windDirection: data.wind.deg,
+		rain: data.rain["1h"],
 		cloudCoverage: data.clouds.all,
 		sunrise: data.sys.sunrise,
 		sunset: data.sys.sunset,

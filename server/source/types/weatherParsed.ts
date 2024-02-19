@@ -7,6 +7,7 @@ export interface WeatherParsed {
   visibility: number;
   windSpeed: number;
   windDirection: number;
+  rain: number;
   cloudCoverage: number;
   sunrise: number;
   sunset: number;

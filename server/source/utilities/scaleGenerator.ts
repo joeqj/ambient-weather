@@ -1,23 +1,9 @@
 /* 
-Generates a scale of music
+Music Scale & Chord Generator
 
-A Typescript re-write of the incredibly helpful post by Jake Albaugh.
+A Typescript re-write of the incredibly helpful post by Jake Albaugh. I can't take too much credit for this one.
 https://codepen.io/jakealbaugh/pen/NrdEYL?editors=1010
 
-I can't take too much credit!
-
-@param key {String} 
-  the root of the key - flats not allowed
-@param mode {String}
-  desired mode
-
-@return {Object}
-  key: the scale key
-  mode: the scale mode id
-  notes: an array of notes
-  step: index of note in key
-  note: the actual note
-  rel_octave: 0 || 1, in root octave or next
 */
 
 type Key = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
@@ -54,7 +40,7 @@ interface Chord {
 
 class scaleGenerator {
 	private readonly dict: dict;
-	private key: string = '';
+	key: string = '';
 	mode: string = '';
 	notes: object[] = [];
 	chord: Chord | null = null;
@@ -66,10 +52,6 @@ class scaleGenerator {
 		this.loadScale();
 	}
 
-	/* 
-		Generates everything we need to know about each scale.
-		@return {Object}
-	*/
 	private loadDictionary() {
 		return {
 			keys: 'C C# D D# E F F# G G# A A# B'.split(' '),
@@ -129,9 +111,6 @@ class scaleGenerator {
 		};
 	}
  
-	/* 
-		Converts a string of Whole and Half string identifiers into an array of numerical steps.
-	*/
 	private generateSteps(stepString: string) {
 		let arr = stepString.split(' ');
 		let steps = [0];
@@ -155,9 +134,6 @@ class scaleGenerator {
 		return steps;
 	}
 
-	/* 
-		Generate ionian triads, each mode is offset by one.
-	*/
   private generateTriads(offset: number) {
     let base = 'maj min min maj maj min dim'.split(' ');
     let triads = [];
@@ -184,15 +160,11 @@ class scaleGenerator {
 	}
 
 	private loadScale() {
-		// Get scale info by mode
 		const id: string = this.paramMode(this.mode)!;
 		const scale = this.dict.scales[id];
-
-		// Get notes to cycle through
 		const keys = this.dict.keys;
-
-		// Starting index for key loop
 		const offset = keys.indexOf(this.key);
+
 		for (let i = 0; i < scale.steps.length; i++) {
 			const step = scale.steps[i];
 			const index = (offset + step) % keys.length;
@@ -203,38 +175,31 @@ class scaleGenerator {
 				this.chord = this.generateChord(i, index, rel_octave, scale.triads[i]);
 			}
 
-			// Create the note object
 			const note: object = {
 				step: i,
 				note: keys[index],
 				rel_octave: rel_octave,
 			};
 
-			// Add the note
 			this.notes.push(note);
 		}
 	}
 
-  // create a chord of notes based on chord type
   private generateChord(index: number, offset: number, octave: number, triads: string) {
-    // get the steps for this chord type
     let steps = this.dict.triads[triads];
-    // instantiate the chord
+
     let chord = { 
 			type: triads, 
 			interval: this.intervalFromType(index, triads), 
 			notes: [] as { note: string, rel_octave: number }[],
 		};
 
-    // load the notes
     let keys = this.dict.keys;
     for(let i = 0; i < steps.length; i++) {
       let step = steps[i];
-      let idx = (offset + step) % keys.length;
-      // relative octave to base
+      let index = (offset + step) % keys.length;
       let rel_octave = (offset + step) > keys.length - 1 ? octave + 1 : octave;
-      // define the note
-      chord.notes.push({ note: keys[idx], rel_octave: rel_octave });
+      chord.notes.push({ note: keys[index], rel_octave: rel_octave });
     }
 
     return chord;

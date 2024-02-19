@@ -11,7 +11,7 @@ router.get('/get', controller.getAllRecords);
 router.get('/live', controller.getWeather);
 
 router.get('/scale', (req, res) => {
-    const scale = new scaleGenerator({ key: 'E', mode: 'phrygian' });	
+    const scale = new scaleGenerator({ key: 'E', mode: 'phrygian' });
     res.send(scale.notes);
 });
 

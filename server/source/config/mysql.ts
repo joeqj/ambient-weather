@@ -1,4 +1,4 @@
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 import config from './config';
 
 const params = {
@@ -9,29 +9,13 @@ const params = {
   port: config.mysql.port
 };
 
-const Connect = async () =>
-  new Promise<mysql.Connection>((resolve, reject) => {
-    const connection = mysql.createConnection(params);
-    connection.connect((error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+const Connect = async () => {
+  return await mysql.createConnection(params);
+}
 
-      resolve(connection);
-    });
-  });
-
-const Query = async (connection: mysql.Connection, query: string) =>
-  new Promise((resolve, reject) => {
-    connection.query(query, connection, (error, result) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve(result);
-    });
-  });
+const Query = async (connection: mysql.Connection, query: string) => {
+  const [results] = await connection.query(query);
+  return results;
+}
 
 export { Connect, Query }

@@ -1,10 +1,10 @@
 import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
-import { FetchWeather } from "../config/openweather";
+import { fetchWeather } from "../config/openweather";
 import { mapResponse } from '../utilities/mapResponse';
 import { Convert } from '../types/weatherResponse';
-import { WeatherObject } from "../types/weatherParsed";
-import { OkPacket } from "mysql";
+import { WeatherParsed } from "../types/weatherParsed";
+import { ResultSetHeader } from "mysql2";
 
 const NAMESPACE = 'Store Data';
 
@@ -21,9 +21,9 @@ const createRecord = (data: any) => {
       Query(connection, query)
         .then(result => {
           // Query successful, return responses
-          const response: OkPacket = <OkPacket>result;
+          const response: ResultSetHeader = <ResultSetHeader>result;
 
-          if (!response.warningCount) {
+          if (!response.warningStatus) {
             // If no errors
             logging.info(NAMESPACE, 'Created SQL record succesfull, affected rows: ' + response.affectedRows);
           }
@@ -57,12 +57,12 @@ const createRecord = (data: any) => {
 };
 
 const storeData = () => {
-  FetchWeather()
+  fetchWeather()
   .then(result => {
 
     // Cast JSON response to WeatherObj interface
     const weatherResponse = Convert.toWeatherResponse(JSON.stringify(result));
-    const parsed: WeatherObject = mapResponse(weatherResponse);
+    const parsed: WeatherParsed = mapResponse(weatherResponse);
     
     // Send data to our db
     createRecord(parsed);

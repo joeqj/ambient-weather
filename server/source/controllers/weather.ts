@@ -1,67 +1,53 @@
 import { NextFunction, Request, Response } from "express";
-import logging from "../config/logging";
 import { Connect, Query } from "../config/mysql";
-import { FetchWeather } from "../config/openweather";
+import logging from "../config/logging";
+import { fetchWeather } from "../config/openweather";
 
 const NAMESPACE = 'Weather';
 
-const getWeather = (req: Request, res: Response, next: NextFunction) => {
+const getWeather = async (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Fetching weather from Openweather');
 
-  FetchWeather()
-    .then(result => { 
-      return res.status(200).json({
-        result
-      })
+  const response = await fetchWeather();
+
+  if (!response) {
+    return res.status(500).json({ 
+      message: 'Error fetching live weather from Openweather'
     })
-    .catch(error => {
-      logging.error(NAMESPACE, error.message, error);
-    
-      return res.status(500).json({ 
-        status: error.status,
-        error
-      })
-    })
+  }
+
+  return res.status(200).json({
+    response
+  });
 }
 
-const getAllRecords = (req: Request, res: Response, next: NextFunction) => {
+const getAllRecords = async (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Getting all records');
 
-  const query = 'SELECT * FROM weather';
+  
+  let connection = null;
+  
+  try {
+    connection = await Connect();
 
-  Connect()
-    .then(connection => {
-      // Connection has been made, perform query
-      Query(connection, query)
-        .then(results => {
-          // Query successful, return response
-          return res.status(200).json({
-            results
-          })
-        })
-        .catch(error => {
-          // Error while performing query
-          logging.error(NAMESPACE, error.message, error);
+    const query = 'SELECT * FROM weather';
+    const results = await Query(connection, query);
+
+    return res.status(200).json({
+      results
+    });
     
-          return res.status(500).json({ 
-            message: error.message,
-            error
-          })
-        })
-        .finally(() => {
-          // Close mysql connection
-          connection.end();
-        })
-    })
-    .catch(error => {
-      // Error while connecting to database
-      logging.error(NAMESPACE, error.message, error);
+  } catch (error: any) {
+    logging.error(NAMESPACE, error);
 
-      return res.status(500).json({ 
-        message: error.message,
-        error
-      })
+    return res.status(500).json({ 
+      error: error.message
     })
+
+  } finally {
+    if (!connection) return;
+    connection.end();
+  }
 };
 
 export default { getWeather, getAllRecords }

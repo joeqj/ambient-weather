@@ -11,19 +11,25 @@ const router = express();
 
 /* Log the request */
 router.use((req, res, next) => {
-  logging.info(NAMESPACE, `
+  logging.info(
+    NAMESPACE,
+    `
     METHOD = [${req.method}], 
     URL = [${req.url}], 
     IP = [${req.socket.remoteAddress}]
-  `);
+  `
+  );
 
   res.on('finish', () => {
-    logging.info(NAMESPACE, `
+    logging.info(
+      NAMESPACE,
+      `
       METHOD = [${req.method}], 
       URL = [${req.url}], 
       IP = [${req.socket.remoteAddress}], 
       STATUS = [${res.statusCode}]
-    `);
+    `
+    );
   });
 
   next();
@@ -63,6 +69,11 @@ router.use((req, res, next) => {
 
 /* Create server */
 const httpServer = http.createServer(router);
-httpServer.listen(config.server.port, () => logging.info(NAMESPACE, `
+httpServer.listen(config.server.port, () =>
+  logging.info(
+    NAMESPACE,
+    `
   Server running on ${config.server.hostname}:${config.server.port}
-`));
+`
+  )
+);

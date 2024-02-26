@@ -1,25 +1,27 @@
-import logging from "../config/logging";
-import { Connect, Query } from "../config/mysql";
-import { fetchWeather } from "../config/openweather";
+import logging from '../config/logging';
+import { Connect, Query } from '../config/mysql';
+import { fetchWeather } from '../config/openweather';
 import { mapResponse } from '../utilities/mapResponse';
 import { Convert } from '../types/weatherResponse';
-import { WeatherParsed } from "../types/weatherParsed";
-import { ResultSetHeader } from "mysql2";
+import { WeatherParsed } from '../types/weatherParsed';
+import { ResultSetHeader } from 'mysql2';
 
 const NAMESPACE = 'Store Data';
 
 const createRecord = (data: any) => {
   const columns = Object.keys(data);
   // Comma seperated values: "value", "another", "etc"
-  const values = Object.values(data).map(v => `'${v}'`).join(',');
+  const values = Object.values(data)
+    .map((v) => `'${v}'`)
+    .join(',');
 
   const query = `INSERT INTO weather (${columns}) VALUES (${values})`;
 
   Connect()
-    .then(connection => {
+    .then((connection) => {
       // Connection has been made, perform query
       Query(connection, query)
-        .then(result => {
+        .then((result) => {
           // Query successful, return responses
           const response: ResultSetHeader = <ResultSetHeader>result;
 
@@ -28,57 +30,54 @@ const createRecord = (data: any) => {
             logging.info(NAMESPACE, 'Created SQL record succesfull, affected rows: ' + response.affectedRows);
           }
           // console.log(result);
-          
+
           return result;
         })
-        .catch(error => {
+        .catch((error) => {
           // Error while performing query
           logging.error(NAMESPACE, error.message, error);
-    
+
           return {
-            ok: false, 
+            ok: false,
             error
-          }
+          };
         })
         .finally(() => {
           // Close mysql connection
           connection.end();
-        })
+        });
     })
-    .catch(error => {
+    .catch((error) => {
       // Error while connecting to database
       logging.error(NAMESPACE, error.message, error);
 
       return {
-        ok: false, 
+        ok: false,
         error
-      }
-    })
+      };
+    });
 };
 
 const storeData = () => {
   fetchWeather()
-  .then(result => {
+    .then((result) => {
+      // Cast JSON response to WeatherObj interface
+      const weatherResponse = Convert.toWeather(JSON.stringify(result));
+      const parsed: WeatherParsed = mapResponse(weatherResponse);
 
-    // Cast JSON response to WeatherObj interface
-    const weatherResponse = Convert.toWeatherResponse(JSON.stringify(result));
-    const parsed: WeatherParsed = mapResponse(weatherResponse);
-    
-    // Send data to our db
-    createRecord(parsed);
-    return
-  })
-  .catch(error => {
-    logging.error(NAMESPACE, error.message, error);
-  
-    return {
-      ok: false, 
-      status: error.status,
-      error
-    }
-  })
-}
+      // Send data to our db
+      createRecord(parsed);
+      return;
+    })
+    .catch((error) => {
+      logging.error(NAMESPACE, error.message, error);
 
-export {
-  storeData
-}
+      return {
+        ok: false,
+        status: error.status,
+        error
+      };
+    });
+};
+
+export { storeData };

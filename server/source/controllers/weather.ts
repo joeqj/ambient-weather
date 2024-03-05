@@ -4,17 +4,18 @@ import logging from '../config/logging';
 import { fetchWeather } from '../config/openweather';
 import { calculateFeeling } from '../utilities/calculateFeeling';
 import { DatabaseResult } from '../types/databaseResult';
+import { fetchingWeather, errorFetchingWeather, creatingRecord } from '../config/locale';
 
 const NAMESPACE = 'Weather';
 
 const getWeather = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Fetching weather from Openweather');
+  logging.info(NAMESPACE, fetchingWeather);
 
   const response = await fetchWeather();
 
   if (!response) {
     return res.status(500).json({
-      message: 'Error fetching live weather from Openweather'
+      message: errorFetchingWeather
     });
   }
 
@@ -24,8 +25,6 @@ const getWeather = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getLatestRecord = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Getting all records');
-
   let connection = null;
 
   try {
@@ -64,13 +63,13 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
 };
 
 const createRecord = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, 'Creating new record');
+  logging.info(NAMESPACE, creatingRecord);
 
   const response = await fetchWeather();
 
   if (!response) {
     return res.status(500).json({
-      message: 'Error fetching live weather from Openweather'
+      message: errorFetchingWeather
     });
   }
 

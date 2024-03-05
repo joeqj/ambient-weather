@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import logging from './config/logging';
 import config from './config/config';
 import weatherRoute from './routes/weather';
-import { storeData } from './services/storeData';
+import { storeData } from './services/cron';
 
 const NAMESPACE = 'Server';
 const router = express();

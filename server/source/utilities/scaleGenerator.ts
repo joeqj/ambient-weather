@@ -1,14 +1,14 @@
 /* 
 Music Scale & Chord Generator
 
-A Typescript re-write of the incredibly helpful post by Jake Albaugh. I can't take too much credit for this one.
+A Typescript re-write of the incredibly helpful codepen by Jake Albaugh. I can't take too much credit for this one.
 https://codepen.io/jakealbaugh/pen/NrdEYL?editors=1010
 
 */
 
-type Key = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
+export type Key = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
 
-type Mode = 'ionian' | 'dorian' | 'phrygian' | 'lydian' | 'mixolydian' | 'aeolian' | 'locrian' | 'major' | 'minor' | 'melodic' | 'harmonic';
+export type Mode = 'ionian' | 'dorian' | 'phrygian' | 'lydian' | 'mixolydian' | 'aeolian' | 'locrian' | 'major' | 'minor' | 'melodic' | 'harmonic';
 
 interface dict {
   keys: string[];

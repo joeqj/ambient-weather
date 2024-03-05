@@ -3,7 +3,6 @@ import config from './config';
 import { Convert, Weather } from '../types/weatherResponse';
 import { WeatherParsed } from '../types/weatherParsed';
 import { mapResponse } from '../utilities/mapResponse';
-import logging from './logging';
 
 const fetchWeather = async () =>
   new Promise<WeatherParsed>(async (resolve, reject) => {

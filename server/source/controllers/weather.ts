@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { Connect, Query } from '../config/mysql';
 import logging from '../config/logging';
 import { fetchWeather } from '../config/openweather';
+import { calculateFeeling } from '../utilities/calculateFeeling';
+import { DatabaseResult } from '../types/databaseRow';
 
 const NAMESPACE = 'Weather';
 
@@ -21,7 +23,7 @@ const getWeather = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const getAllRecords = async (req: Request, res: Response, next: NextFunction) => {
+const getLatestRecord = async (req: Request, res: Response, next: NextFunction) => {
   logging.info(NAMESPACE, 'Getting all records');
 
   let connection = null;
@@ -29,13 +31,27 @@ const getAllRecords = async (req: Request, res: Response, next: NextFunction) =>
   try {
     connection = await Connect();
 
-    const query = 'SELECT * FROM weather';
+    const query = 'SELECT * FROM weather ORDER BY id DESC LIMIT 1';
     const results = await Query(connection, query);
 
+    let data = null;
+
+    if (Array.isArray(results)) {
+      const feeling = calculateFeeling(results[0] as DatabaseResult);
+
+      data = {
+        ...results[0],
+        key: feeling.key,
+        mode: feeling.mode,
+        scale: feeling.notes
+      };
+    }
+
     return res.status(200).json({
-      results
+      data
     });
   } catch (error: any) {
+    /* There was an error with the db so lets log the message to server and client */
     logging.error(NAMESPACE, error);
 
     return res.status(500).json({
@@ -47,4 +63,4 @@ const getAllRecords = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export default { getWeather, getAllRecords };
+export default { getWeather, getLatestRecord };

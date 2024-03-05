@@ -5,7 +5,7 @@
 -- https://tableplus.com/
 --
 -- Database: ambient-weather
--- Generation Time: 2024-03-05 10:02:07.859579
+-- Generation Time: 2024-03-05 10:42:55.659438
 -- -------------------------------------------------------------
 
 CREATE TABLE `weather` (
@@ -23,7 +23,10 @@ CREATE TABLE `weather` (
   `cloudCoverage` tinyint(4) DEFAULT NULL,
   `sunrise` datetime DEFAULT NULL,
   `sunset` datetime DEFAULT NULL,
+  `timezone` char(2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+INSERT INTO `ambient-weather`.`weather` (`id`, `createdAt`, `text`, `description`, `temperature`, `pressure`, `humidity`, `visibility`, `windSpeed`, `windDirection`, `rain`, `cloudCoverage`, `sunrise`, `sunset`, `timezone`) VALUES (1, '2024-03-05 10:23:49', 'Mist', 'mist', 6.14, 1011, 92, 4000, 2.06, 'south', 0, 75, '2024-03-05 06:44:36', '2024-03-05 17:51:15', 'GB');
 

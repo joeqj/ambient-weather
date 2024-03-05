@@ -5,6 +5,7 @@
   "main": "source/server.ts",
   "scripts": {
     "start": "nodemon source/server.ts",
+    "lint": "prettier --write source/",
     "build": "rm -rf dist/ && prettier --write source/ && npx tsc"
   },
   "author": "joeqj",

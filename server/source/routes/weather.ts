@@ -4,7 +4,7 @@ import { scaleGenerator } from '../utilities/scaleGenerator';
 
 const router = express.Router();
 
-// router.post('/create/record', controller.createRecord);
+router.get('/create', controller.createRecord);
 router.get('/get', controller.getLatestRecord);
 
 // Debugging purposes - get live data from OpenWeather

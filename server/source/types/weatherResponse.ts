@@ -66,6 +66,7 @@ export interface WeatherElement {
 export interface Wind {
   speed: number;
   deg: number;
+  gust: number;
 }
 
 // Converts JSON strings to/from your types
@@ -308,7 +309,8 @@ const typeMap: any = {
   Wind: o(
     [
       { json: 'speed', js: 'speed', typ: 3.14 },
-      { json: 'deg', js: 'deg', typ: 0 }
+      { json: 'deg', js: 'deg', typ: 0 },
+      { json: 'gust', js: 'gust', typ: 3.14 }
     ],
     false
   )

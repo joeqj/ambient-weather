@@ -1,5 +1,5 @@
 import { scaleGenerator } from './scaleGenerator';
-import { DatabaseResult } from '../types/databaseRow';
+import { DatabaseResult } from '../types/databaseResult';
 import { Key, Mode } from './scaleGenerator';
 
 export const calculateFeeling = (item: DatabaseResult) => {

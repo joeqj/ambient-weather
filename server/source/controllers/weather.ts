@@ -75,9 +75,12 @@ const createRecord = async (req: Request, res: Response, next: NextFunction) => 
 
   // We need to convert unix timestamps to MySQL datetime format and add a timezone
   // TODO: Move this to a utility function and generate the timezone from the lat/lon
+  const directions = ['north', 'east', 'south', 'west'];
+
   const data = {
     ...response,
     createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    windDirection: directions[Math.floor(response.windDirection / 90) % 4],
     sunrise: new Date(response.sunrise * 1000).toISOString().slice(0, 19).replace('T', ' '),
     sunset: new Date(response.sunset * 1000).toISOString().slice(0, 19).replace('T', ' '),
     timezone: 'GB'
@@ -87,6 +90,8 @@ const createRecord = async (req: Request, res: Response, next: NextFunction) => 
   const values = Object.values(data)
     .map((v) => `'${v}'`)
     .join(',');
+
+  console.log(data);
 
   let connection = null;
 

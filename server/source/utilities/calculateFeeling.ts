@@ -67,5 +67,6 @@ export const calculateFeeling = (item: DatabaseResult) => {
   }
 
   const scale = new scaleGenerator(parameters);
+
   return scale;
 };

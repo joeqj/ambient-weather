@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch';
 import config from './config';
-import { Convert, Weather } from '../types/weatherResponse';
+import { Convert } from '../types/weatherResponse';
 import { WeatherParsed } from '../types/weatherParsed';
 import { mapResponse } from '../utilities/mapResponse';
 
@@ -21,9 +21,14 @@ const fetchWeather = async () =>
 
     const data = await response.json();
 
-    // OpenWeather API does not return a rain object if there is no rain so we set it to always be present
+    // OpenWeather API does not always return a rain object so we set it to always be present
     if (!Object.hasOwnProperty.call(data, 'rain')) {
       data.rain = { '1h': 0 };
+    }
+
+    // OpenWeather API does not always return a gust object so we set it to always be present
+    if (!Object.hasOwnProperty.call(data, 'wind.gust')) {
+      data.wind.gust = 0;
     }
 
     const weather = Convert.toWeather(JSON.stringify(data));

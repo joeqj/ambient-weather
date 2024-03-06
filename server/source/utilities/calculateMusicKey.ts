@@ -22,7 +22,7 @@ export const calculateMusicKey = (item: DatabaseResult) => {
         mode: 'lydian'
       };
       break;
-    case 'scattered clouds':
+    case 'clouds':
       parameters = {
         key: 'F',
         mode: 'mixolydian'
@@ -35,6 +35,7 @@ export const calculateMusicKey = (item: DatabaseResult) => {
       };
       break;
     case 'shower rain':
+    case 'drizzle':
       parameters = {
         key: 'C#',
         mode: 'dorian'

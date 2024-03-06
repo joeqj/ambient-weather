@@ -1,24 +1,30 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import "./style.css";
+import { fetchWeather } from "./fetch.ts";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+window.addEventListener("DOMContentLoaded", async () => {
+  const data = await fetchWeather();
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+  const audio = await import("./audio");
+
+  const description: String = data.description;
+  const temperature: Number = Math.round(data.temperature);
+
+  const notice: HTMLDivElement = document.createElement("div");
+  notice.classList.add("notice");
+  notice.innerHTML = `
+    <h2>${temperature}&deg;C</h2>
+    <p>${description}</p>
+  `;
+
+  const playButton: HTMLButtonElement = document.createElement("button");
+  playButton.textContent = "Play Audio";
+
+  playButton.addEventListener("click", () => {
+    audio.initAudio(data);
+    playButton.remove();
+  });
+
+  notice.appendChild(playButton);
+
+  document.querySelector<HTMLDivElement>("#app")!.appendChild(notice);
+});

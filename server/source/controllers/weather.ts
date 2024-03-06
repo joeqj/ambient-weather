@@ -43,7 +43,8 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
         ...results[0],
         key: feeling.key,
         mode: feeling.mode,
-        scale: feeling.notes
+        scale: feeling.notes,
+        chord: feeling.chord
       };
     }
 

@@ -7,6 +7,16 @@ export const chord = (chord: Chord) => {
     roomSize: 1,
     wet: 1,
   }).toDestination();
+  // const filter = new Tone.Filter({
+  //   type: "bandpass",
+  //   frequency: 600,
+  //   rolloff: -12,
+  // }).toDestination();
+
+  // const reverb = new Tone.Reverb({
+  //   decay: 1,
+  //   wet: 1,
+  // });
 
   const padKeys: string[] = [];
   const transpose: number = 3;

@@ -34,7 +34,7 @@ interface Chord {
   interval: string;
   notes: {
     note: string;
-    rel_octave: number;
+    relOctave: number;
   }[];
 }
 
@@ -169,16 +169,16 @@ class scaleGenerator {
       const step = scale.steps[i];
       const index = (offset + step) % keys.length;
       // Relative octave. 0 = same as root, 1 = next ocave up
-      const rel_octave = offset + step > keys.length - 1 ? 1 : 0;
+      const relOctave = offset + step > keys.length - 1 ? 1 : 0;
 
       if (i === 0) {
-        this.chord = this.generateChord(i, index, rel_octave, scale.triads[i]);
+        this.chord = this.generateChord(i, index, relOctave, scale.triads[i]);
       }
 
       const note: object = {
         step: i,
         note: keys[index],
-        rel_octave: rel_octave
+        relOctave: relOctave
       };
 
       this.notes.push(note);
@@ -191,15 +191,15 @@ class scaleGenerator {
     let chord = {
       type: triads,
       interval: this.intervalFromType(index, triads),
-      notes: [] as { note: string; rel_octave: number }[]
+      notes: [] as { note: string; relOctave: number }[]
     };
 
     let keys = this.dict.keys;
     for (let i = 0; i < steps.length; i++) {
       let step = steps[i];
       let index = (offset + step) % keys.length;
-      let rel_octave = offset + step > keys.length - 1 ? octave + 1 : octave;
-      chord.notes.push({ note: keys[index], rel_octave: rel_octave });
+      let relOctave = offset + step > keys.length - 1 ? octave + 1 : octave;
+      chord.notes.push({ note: keys[index], relOctave: relOctave });
     }
 
     return chord;

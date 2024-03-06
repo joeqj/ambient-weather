@@ -2,20 +2,21 @@ import { NextFunction, Request, Response } from 'express';
 import { Connect, Query } from '../config/mysql';
 import logging from '../config/logging';
 import { fetchWeather } from '../config/openweather';
-import { calculateFeeling } from '../utilities/calculateFeeling';
+import { calculateMusicKey } from '../utilities/calculateMusicKey';
 import { DatabaseResult } from '../types/databaseResult';
-import { fetchingWeather, errorFetchingWeather, creatingRecord } from '../config/locale';
+import { locale } from '../config/locale';
+import { formatData } from '../utilities/formatData';
 
 const NAMESPACE = 'Weather';
 
 const getWeather = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, fetchingWeather);
+  logging.info(NAMESPACE, locale.fetchingWeather);
 
   const response = await fetchWeather();
 
   if (!response) {
     return res.status(500).json({
-      message: errorFetchingWeather
+      message: locale.errorFetchingWeather
     });
   }
 
@@ -36,7 +37,7 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
     let data = null;
 
     if (Array.isArray(results)) {
-      const feeling = calculateFeeling(results[0] as DatabaseResult);
+      const feeling = calculateMusicKey(results[0] as DatabaseResult);
 
       data = {
         ...results[0],
@@ -63,35 +64,22 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
 };
 
 const createRecord = async (req: Request, res: Response, next: NextFunction) => {
-  logging.info(NAMESPACE, creatingRecord);
+  logging.info(NAMESPACE, locale.creatingRecord);
 
   const response = await fetchWeather();
 
   if (!response) {
     return res.status(500).json({
-      message: errorFetchingWeather
+      message: locale.errorFetchingWeather
     });
   }
 
-  // We need to convert unix timestamps to MySQL datetime format and add a timezone
-  // TODO: Move this to a utility function and generate the timezone from the lat/lon
-  const directions = ['north', 'east', 'south', 'west'];
-
-  const data = {
-    ...response,
-    createdAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
-    windDirection: directions[Math.floor(response.windDirection / 90) % 4],
-    sunrise: new Date(response.sunrise * 1000).toISOString().slice(0, 19).replace('T', ' '),
-    sunset: new Date(response.sunset * 1000).toISOString().slice(0, 19).replace('T', ' '),
-    timezone: 'GB'
-  };
+  const data = formatData(response);
 
   const columns = Object.keys(data);
   const values = Object.values(data)
     .map((v) => `'${v}'`)
     .join(',');
-
-  console.log(data);
 
   let connection = null;
 
@@ -105,7 +93,6 @@ const createRecord = async (req: Request, res: Response, next: NextFunction) => 
       message: results
     });
   } catch (error: any) {
-    /* There was an error with the db so lets log the message to server and client */
     logging.error(NAMESPACE, error);
 
     return res.status(500).json({

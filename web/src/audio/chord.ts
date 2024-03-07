@@ -12,7 +12,7 @@ export const chord = (chord: Chord, preset: string) => {
 
   switch (preset) {
     case "fog":
-      params.volume = -8;
+      params.volume = -0;
       params.cutoff = 100;
       params.distortion = 0;
       break;

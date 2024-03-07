@@ -25,13 +25,13 @@ npm install
 npm start
 ```
 
-You will need to create an account on [OpenWeather](https://openweathermap.org/api) and create an API key to add to our `.env` file in the server directory.
+You will need to create an account on [OpenWeather](https://openweathermap.org/api) and create an API key to add to our `.env` file in the server directory:
 
 ```env
 OPENWEATHER_APIKEY=<your_api_key>
 ```
 
-You can also add database connection credentials in here. Appropriate fallbacks have been declared in the server's `config.ts` file that will work with the docker configuration.
+You can also add database connection credentials in here. Appropriate fallbacks have been declared in the server's `config.ts` file that will work with the default docker configuration.
 
 You will then be able to visit [http://localhost:3333/weather/get](http://localhost:3333/weather/get) in your browser to fetch the latest record from the database
 

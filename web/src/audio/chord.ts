@@ -1,7 +1,23 @@
 import * as Tone from "tone";
 import { Chord } from "../types/fetch";
 
-export const chord = (chord: Chord) => {
+export const chord = (chord: Chord, preset: string) => {
+  if (!chord) return;
+
+  const params = {
+    volume: -20,
+    cutoff: 300,
+    distortion: 0.1,
+  };
+
+  switch (preset) {
+    case "fog":
+      params.volume = -8;
+      params.cutoff = 100;
+      params.distortion = 0;
+      break;
+  }
+
   const padKeys: string[] = [];
   const transpose: number = 3;
 
@@ -10,7 +26,7 @@ export const chord = (chord: Chord) => {
     padKeys.push(note);
   });
 
-  const dist = new Tone.Distortion(0.1).toDestination();
+  const dist = new Tone.Distortion(params.distortion).toDestination();
 
   const reverb2 = new Tone.Reverb({
     decay: 1,
@@ -19,7 +35,7 @@ export const chord = (chord: Chord) => {
 
   const filter = new Tone.Filter({
     type: "bandpass",
-    frequency: 600,
+    frequency: params.cutoff,
     rolloff: -12,
   });
 
@@ -29,7 +45,7 @@ export const chord = (chord: Chord) => {
   });
 
   const synth = new Tone.PolySynth({
-    volume: -20,
+    volume: params.volume,
     maxPolyphony: 3,
     options: {
       oscillator: {

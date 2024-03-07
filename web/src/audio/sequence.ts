@@ -5,10 +5,33 @@ const shuffleArray = (array: any[]) => {
   return array.sort(() => Math.random() - 0.5);
 };
 
-export const sequence = (scale: ScaleEntity[] | null | undefined) => {
+export const sequence = (
+  scale: ScaleEntity[] | null | undefined,
+  preset: string
+) => {
   if (!scale) return;
 
-  const transpose: number = 5;
+  const params = {
+    transpose: 5,
+    attack: 0,
+    volume: -40,
+    reverbDecay: 0.1,
+    sequenceSpeed: "16n",
+    sequenceProbability: 0.35,
+  };
+
+  switch (preset) {
+    case "fog":
+      params.transpose = 3;
+      params.attack = 2;
+      params.volume = -45;
+      params.reverbDecay = 0.91;
+      params.sequenceSpeed = "1n";
+      params.sequenceProbability = 0.75;
+      break;
+  }
+
+  const transpose: number = params.transpose;
 
   const keys = shuffleArray(
     scale.map((c) => `${c.note}${transpose + c.relOctave}`)
@@ -20,8 +43,8 @@ export const sequence = (scale: ScaleEntity[] | null | undefined) => {
     octaves: 2,
     baseFrequency: 1000,
   });
-  const reverb = new Tone.JCReverb(0.1);
-  const delay = new Tone.FeedbackDelay(0.6, 0.7);
+  const reverb = new Tone.JCReverb(params.reverbDecay);
+  const delay = new Tone.FeedbackDelay(0.6, 0.25);
 
   const synth = new Tone.MonoSynth({
     oscillator: {
@@ -29,7 +52,7 @@ export const sequence = (scale: ScaleEntity[] | null | undefined) => {
     },
 
     envelope: {
-      attack: 0,
+      attack: params.attack,
       decay: 2,
       sustain: 1,
       release: 1,
@@ -43,7 +66,7 @@ export const sequence = (scale: ScaleEntity[] | null | undefined) => {
       synth.triggerAttackRelease(note, 2.5, time);
     },
     keys,
-    "8n"
+    params.sequenceSpeed
   );
 
   sequence.start();

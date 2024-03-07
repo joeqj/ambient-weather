@@ -60,6 +60,7 @@ export const calculateMusicKey = (item: DatabaseResult) => {
       };
       break;
     case 'mist':
+    case 'fog':
       parameters = {
         key: 'G',
         mode: 'locrian'

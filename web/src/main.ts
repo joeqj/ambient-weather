@@ -4,11 +4,10 @@ import { loadingSvg } from "./ui/loading.ts";
 import { errorMessage } from "./ui/error.ts";
 
 window.addEventListener("DOMContentLoaded", () => {
-  const notice: HTMLDivElement = document.createElement("div");
-  notice.classList.add("notice");
+  const notice: HTMLDivElement = document.querySelector(".notice")!;
+  const playButton: HTMLButtonElement | null = notice.querySelector("button");
 
-  const playButton: HTMLButtonElement = document.createElement("button");
-  playButton.textContent = "Begin listening to the weather";
+  if (!playButton) return;
 
   playButton.addEventListener("click", async () => {
     notice.innerHTML = loadingSvg();

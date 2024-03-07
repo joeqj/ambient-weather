@@ -64,16 +64,12 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-const createRecord = async (req: Request, res: Response, next: NextFunction) => {
+const createRecord = async () => {
   logging.info(NAMESPACE, locale.creatingRecord);
 
   const response = await fetchWeather();
 
-  if (!response) {
-    return res.status(500).json({
-      message: locale.errorFetchingWeather
-    });
-  }
+  if (!response) return;
 
   const data = formatData(response);
 
@@ -90,19 +86,29 @@ const createRecord = async (req: Request, res: Response, next: NextFunction) => 
     const query = `INSERT INTO weather (${columns}) VALUES (${values})`;
     const results = await Query(connection, query);
 
-    return res.status(200).json({
-      message: results
-    });
+    return results;
   } catch (error: any) {
     logging.error(NAMESPACE, error);
 
-    return res.status(500).json({
-      error: error.message
-    });
+    return null;
   } finally {
     if (!connection) return;
     connection.end();
   }
 };
 
-export default { getWeather, getLatestRecord, createRecord };
+const forceCreateRecord = async (req: Request, res: Response, next: NextFunction) => {
+  const response = await createRecord();
+
+  if (!response) {
+    return res.status(500).json({
+      message: locale.errorFetchingWeather
+    });
+  }
+
+  return res.status(200).json({
+    message: response
+  });
+};
+
+export default { getWeather, getLatestRecord, createRecord, forceCreateRecord };

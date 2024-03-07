@@ -1,31 +1,12 @@
+import schedule from 'node-schedule';
 import logging from '../config/logging';
-import { fetchWeather } from '../config/openweather';
-import { mapResponse } from '../utilities/mapResponse';
-import { Convert } from '../types/weatherResponse';
-import { WeatherParsed } from '../types/weatherParsed';
+import controller from '../controllers/weather';
 
-const NAMESPACE = 'Store Data';
+const NAMESPACE = 'Store Data Service';
 
-const storeData = () => {
-  fetchWeather()
-    .then((result) => {
-      // Cast JSON response to WeatherObj interface
-      const weatherResponse = Convert.toWeather(JSON.stringify(result));
-      const parsed: WeatherParsed = mapResponse(weatherResponse);
-
-      // Send data to our db
-      // insertNewRecord(parsed);
-      return;
-    })
-    .catch((error) => {
-      logging.error(NAMESPACE, error.message, error);
-
-      return {
-        ok: false,
-        status: error.status,
-        error
-      };
-    });
+export const scheduleStorage = () => {
+  schedule.scheduleJob(`00 * * * *`, () => {
+    logging.info(NAMESPACE, 'running on the hour');
+    controller.createRecord();
+  });
 };
-
-export { storeData };

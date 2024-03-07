@@ -4,29 +4,20 @@ import bodyParser from 'body-parser';
 import logging from './config/logging';
 import config from './config/config';
 import weatherRoute from './routes/weather';
-import { storeData } from './services/cron';
+import { scheduleStorage } from './services/cron';
 
 const NAMESPACE = 'Server';
 const router = express();
 
 /* Log the request */
 router.use((req, res, next) => {
-  logging.info(
-    NAMESPACE,
-    `
-    METHOD = [${req.method}], 
-    URL = [${req.url}], 
-    IP = [${req.socket.remoteAddress}]
-  `
-  );
-
   res.on('finish', () => {
     logging.info(
       NAMESPACE,
       `
-      METHOD = [${req.method}], 
-      URL = [${req.url}], 
-      IP = [${req.socket.remoteAddress}], 
+      METHOD = [${req.method}],
+      URL = [${req.url}],
+      IP = [${req.socket.remoteAddress}],
       STATUS = [${res.statusCode}]
     `
     );
@@ -64,8 +55,8 @@ router.use((req, res, next) => {
   });
 });
 
-/* Daily Job */
-// storeData();
+/* Cron Job Service */
+scheduleStorage();
 
 /* Create server */
 const httpServer = http.createServer(router);

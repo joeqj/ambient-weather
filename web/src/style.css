@@ -12,6 +12,8 @@
   background-color: var(--bg-color);
   height: 100vh;
   display: grid;
+  font-family: sans-serif;
+  letter-spacing: -0.005rem;
 }
 
 .title {
@@ -19,8 +21,8 @@
   position: absolute;
   padding: theme("spacing.4");
 
-  & h1 {
-    font-size: theme("fontSize.xl");
+  & svg {
+    fill: var(--text-color);
   }
 }
 
@@ -30,11 +32,14 @@
   color: var(--text-color);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: theme("spacing.4");
-  font-size: theme("fontSize.2xl");
+  font-size: theme("fontSize.base");
+  max-width: 500px;
 
-  & h2 {
-    font-size: theme("fontSize.6xl");
+  & h1 {
+    font-size: theme("fontSize.2xl");
+    letter-spacing: -0.005rem;
   }
 
   & .description {
@@ -42,11 +47,11 @@
   }
 
   & button {
-    padding: theme("spacing.2") theme("spacing.4");
+    padding: theme("spacing.2") theme("spacing.8");
     background-color: var(--btn-color);
-    color: var(--bg-color);
+    color: var(--text-color);
     border-radius: theme("borderRadius.lg");
-    font-size: theme("fontSize.2xl");
+    letter-spacing: -0.005rem;
     cursor: pointer;
     display: inline-block;
     margin-top: theme("spacing.4");

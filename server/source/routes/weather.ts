@@ -3,10 +3,14 @@ import controller from '../controllers/weather';
 
 const router = express.Router();
 
-router.get('/create', controller.createRecord);
 router.get('/get', controller.getLatestRecord);
 
-// Debugging purposes - get live data from OpenWeather
-router.get('/live', controller.getWeather);
+/*
+  Debugging routes:
+  * Get live data from OpenWeather
+  * Create a new record in the db
+*/
+// router.get('/live', controller.getWeather);
+// router.get('/create', controller.forceCreateRecord);
 
 export = router;

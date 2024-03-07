@@ -16,16 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let data = await fetchWeather();
 
     if (!data) {
-      // Lets retry a further 2 times before erroring out
-      for (let i = 1; i < 3; i++) {
-        setTimeout(async () => {
-          data = await fetchWeather();
-
-          if (i == 2 && !data) {
-            notice.innerHTML = errorMessage();
-          }
-        }, i * 2000);
-      }
+      notice.innerHTML = errorMessage();
       return;
     }
 

@@ -16,7 +16,7 @@ const MYSQL = {
   password: MYSQL_PASSWORD
 };
 
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
+const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'http://localhost';
 const SERVER_PORT = process.env.SERVER_PORT || 3333;
 
 const SERVER = {

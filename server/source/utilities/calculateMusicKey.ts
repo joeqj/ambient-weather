@@ -1,6 +1,13 @@
 import { scaleGenerator } from './scaleGenerator';
 import { DatabaseResult } from '../types/databaseResult';
-import { Key, Mode } from './scaleGenerator';
+import { Key, Mode, Chord } from './scaleGenerator';
+
+interface CalculatedResults {
+  key: string;
+  mode: string;
+  notes: object[];
+  chord: Chord | null;
+}
 
 export const calculateMusicKey = (item: DatabaseResult) => {
   let parameters: { key: Key; mode: Mode } = {
@@ -68,7 +75,7 @@ export const calculateMusicKey = (item: DatabaseResult) => {
       break;
   }
 
-  const scale = new scaleGenerator(parameters);
+  const scale: CalculatedResults = new scaleGenerator(parameters);
 
   return scale;
 };

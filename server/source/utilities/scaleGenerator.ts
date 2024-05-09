@@ -1,4 +1,4 @@
-/* 
+/*
 Music Scale & Chord Generator
 
 A Typescript re-write of the incredibly helpful codepen by Jake Albaugh. I can't take too much credit for this one.
@@ -29,7 +29,7 @@ interface parameters {
   mode: Mode;
 }
 
-interface Chord {
+export interface Chord {
   type: string;
   interval: string;
   notes: {

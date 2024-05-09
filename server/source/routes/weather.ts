@@ -11,6 +11,5 @@ router.get('/get', controller.getLatestRecord);
   * Create a new record in the db
 */
 // router.get('/live', controller.getWeather);
-// router.get('/create', controller.forceCreateRecord);
 
 export = router;

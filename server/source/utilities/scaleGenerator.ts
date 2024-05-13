@@ -1,7 +1,7 @@
 /*
 Music Scale & Chord Generator
 
-A Typescript re-write of the incredibly helpful codepen by Jake Albaugh. I can't take too much credit for this one.
+A re-write of this incredibly helpful codepen by Jake Albaugh.
 https://codepen.io/jakealbaugh/pen/NrdEYL?editors=1010
 
 */
@@ -29,9 +29,23 @@ interface parameters {
   mode: Mode;
 }
 
+interface Notes {
+  step: number;
+  note: string;
+  rel_octave: number;
+  triad: {
+    type: string;
+    notes: [
+      {
+        note: string;
+        rel_octave: number;
+      }
+    ];
+  };
+}
+
 export interface Chord {
   type: string;
-  interval: string;
   notes: {
     note: string;
     relOctave: number;
@@ -159,9 +173,28 @@ class scaleGenerator {
     }[mode];
   }
 
+  private generateChords(index: number, offset: number, octave: number, triad: string) {
+    let steps = this.dict.triads[triad];
+
+    let chord: Chord = {
+      type: triad as string,
+      notes: []
+    };
+
+    let keys = this.dict.keys;
+    for (let i = 0; i < steps.length; i++) {
+      let step = steps[i];
+      let index = (offset + step) % keys.length;
+      let relOctave = offset + step > keys.length - 1 ? octave + 1 : octave;
+      chord.notes.push({ note: keys[index], relOctave: relOctave });
+    }
+    return chord;
+  }
+
   private loadScale() {
     const id: string = this.paramMode(this.mode)!;
     const scale = this.dict.scales[id];
+
     const keys = this.dict.keys;
     const offset = keys.indexOf(this.key);
 
@@ -171,6 +204,8 @@ class scaleGenerator {
       // Relative octave. 0 = same as root, 1 = next ocave up
       const relOctave = offset + step > keys.length - 1 ? 1 : 0;
 
+      let triad = this.generateChords(i, index, relOctave, scale.triads[i]);
+
       if (i === 0) {
         this.chord = this.generateChord(i, index, relOctave, scale.triads[i]);
       }
@@ -178,7 +213,8 @@ class scaleGenerator {
       const note: object = {
         step: i,
         note: keys[index],
-        relOctave: relOctave
+        relOctave: relOctave,
+        triad: triad
       };
 
       this.notes.push(note);
@@ -190,7 +226,6 @@ class scaleGenerator {
 
     let chord = {
       type: triads,
-      interval: this.intervalFromType(index, triads),
       notes: [] as { note: string; relOctave: number }[]
     };
 
@@ -203,26 +238,6 @@ class scaleGenerator {
     }
 
     return chord;
-  }
-
-  private intervalFromType(step: number, type: string) {
-    let steps = 'i ii iii iv v vi vii'.split(' ');
-    let s = steps[step];
-    switch (type) {
-      case 'maj':
-        s = s.toUpperCase();
-        break;
-      case 'min':
-        s = s;
-        break;
-      case 'aug':
-        s = s.toUpperCase() + '+';
-        break;
-      case 'dim':
-        s = s + '°';
-        break;
-    }
-    return s;
   }
 }
 

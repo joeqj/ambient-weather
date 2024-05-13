@@ -4,6 +4,7 @@ import controller from '../controllers/weather';
 const router = express.Router();
 
 router.get('/get', controller.getLatestRecord);
+router.get('/update', controller.updateRecord);
 
 /*
   Debugging routes:

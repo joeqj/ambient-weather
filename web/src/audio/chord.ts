@@ -1,37 +1,43 @@
 import * as Tone from "tone";
-import { Chord } from "../types/fetch";
+import { Chord, ScaleEntity } from "../types/fetch";
 
-export const chord = (chord: Chord, preset: string) => {
-  if (!chord) return;
+export const chord = (
+  data: ScaleEntity[] | null | undefined,
+  chord: Chord,
+  preset: string
+) => {
+  if (!data && !chord) return;
+
+  let chords: Chord[] = [];
+
+  if (data) {
+    chords = data.map((s) => s.triad);
+  } else {
+    chords.push(chord);
+  }
 
   const params = {
-    volume: -20,
+    volume: 0,
     cutoff: 300,
-    distortion: 0.1,
   };
 
   switch (preset) {
     case "fog":
-      params.volume = -0;
-      params.cutoff = 100;
-      params.distortion = 0;
+      params.volume = 50;
+      params.cutoff = 0.5;
       break;
   }
 
   const padKeys: string[] = [];
   const transpose: number = 3;
-
-  chord.notes?.forEach((item) => {
-    const note = `${item.note}${transpose + item.relOctave}`;
-    padKeys.push(note);
-  });
-
-  const dist = new Tone.Distortion(params.distortion).toDestination();
+  let chordIndex = 0;
 
   const reverb2 = new Tone.Reverb({
     decay: 1,
     wet: 1,
-  });
+  }).toDestination();
+
+  const autoWah = new Tone.AutoWah(400, 1, -30);
 
   const filter = new Tone.Filter({
     type: "bandpass",
@@ -44,22 +50,42 @@ export const chord = (chord: Chord, preset: string) => {
     wet: 1,
   });
 
-  const synth = new Tone.PolySynth({
+  const sampler = new Tone.Sampler({
+    urls: {
+      C3: "unison.mp3",
+    },
+    baseUrl: "/",
     volume: params.volume,
-    maxPolyphony: 3,
-    options: {
-      oscillator: {
-        type: "sawtooth19",
-      },
-      envelope: {
-        attack: 4,
-        decay: 1,
-        sustain: 1,
-        release: 4,
-      },
+    attack: 4,
+    release: 4,
+
+    onload: () => {
+      chords[chordIndex].notes?.forEach((item) => {
+        const note = `${item.note}${transpose + item.relOctave}`;
+        padKeys.push(note);
+      });
+
+      let index = 0;
+
+      setInterval(() => {
+        sampler.triggerAttackRelease(padKeys, 5);
+        index += 1;
+
+        if (index % 10 === 0) {
+          chordIndex += 1 % chords.length;
+
+          padKeys.length = 3;
+
+          chords[chordIndex].notes?.forEach((item) => {
+            const note = `${item.note}${transpose + item.relOctave}`;
+            padKeys.push(note);
+          });
+
+          console.log(`new ${chords[chordIndex].type} chord: ` + padKeys);
+        }
+      }, 2000);
     },
   });
 
-  synth.chain(reverb, filter, reverb2, dist);
-  synth.triggerAttackRelease(padKeys, Infinity);
+  sampler.chain(reverb, filter, autoWah, reverb2);
 };

@@ -15,8 +15,18 @@ export const calculateMusicKey = (item: DatabaseResult) => {
     mode: 'major'
   };
 
+  let weather = item.text.toLowerCase();
+
+  if (item.description == 'broken clouds') {
+    weather = item.description;
+  }
+
+  if (item.description == 'few clouds') {
+    weather = item.description;
+  }
+
   //TODO: Use the cloud coverage data to influence the scale
-  switch (item.text.toLowerCase()) {
+  switch (weather) {
     case 'clear sky':
       parameters = {
         key: 'A',
@@ -25,7 +35,7 @@ export const calculateMusicKey = (item: DatabaseResult) => {
       break;
     case 'few clouds':
       parameters = {
-        key: 'C',
+        key: item.temperature >= 15 ? 'C' : 'B',
         mode: 'lydian'
       };
       break;

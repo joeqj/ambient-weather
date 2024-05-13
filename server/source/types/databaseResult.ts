@@ -1,5 +1,5 @@
 export interface DatabaseResult {
-  id: number;
+  id: number | null;
   created_at: string;
   text: string;
   description: string;
@@ -8,7 +8,7 @@ export interface DatabaseResult {
   humidity: number;
   visibility: number;
   windSpeed: number;
-  windDirection: number;
+  windDirection: string;
   rain: number;
   cloudCoverage: number;
   sunrise: string;

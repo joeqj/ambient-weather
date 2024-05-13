@@ -64,6 +64,28 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
+const updateRecord = async () => {
+  logging.info(NAMESPACE, locale.updatingRecord);
+
+  const response = await fetchWeather();
+
+  if (!response) return;
+
+  const data = formatData(response);
+
+  const date = new Date();
+
+  const object: DatabaseResult = {
+    id: null,
+    created_at: date.toISOString(),
+    ...data
+  };
+
+  globalWeatherObject = object;
+
+  return globalWeatherObject;
+};
+
 const createRecord = async () => {
   logging.info(NAMESPACE, locale.creatingRecord);
 
@@ -102,4 +124,4 @@ const createRecord = async () => {
   }
 };
 
-export default { getWeather, getLatestRecord, createRecord };
+export default { getWeather, getLatestRecord, updateRecord, createRecord };

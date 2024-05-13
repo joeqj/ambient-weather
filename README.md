@@ -49,8 +49,9 @@ npm run dev
 
 - [x] Fetch weather data for Leeds, UK and store in our database
 - [x] Scheduled cron job to store data on the hour every hour
-- [ ] Store data for the hour in global JS object so we don't need to query the database on every request
+- [x] Store data for the hour in global JS object so we don't need to query the database on every request
 - [ ] Create GitHub action to deploy main branch to hosting via SSH that will also restart application
+- [ ] Refactor code for legibility
 - [ ] Write some unit tests with Jest
 - [ ] Add all capital cities in the world
 - [ ] Drop scheduled cron job to 4 times a day

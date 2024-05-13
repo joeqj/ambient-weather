@@ -7,7 +7,7 @@ export const wind = (windSpeed: number) => {
 
   const noise: Noise = new Tone.Noise("white");
   // Set the volume to be louder when it's windy
-  noise.volume.value = -40 + windSpeed;
+  noise.volume.value = -30 + windSpeed;
 
   const filter = new Tone.Filter({
     type: "lowpass",

@@ -25,15 +25,21 @@ export interface ScaleEntity {
   step: number;
   note: string;
   relOctave: number;
+  triad: Chord;
 }
 
 export interface Chord {
   type: string;
-  interval: string;
   notes?: NotesEntity[] | null;
 }
 
 export interface NotesEntity {
   note: string;
   relOctave: number;
+  notes: [
+    {
+      note: string;
+      relOctave: number;
+    }
+  ];
 }

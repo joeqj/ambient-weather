@@ -4,9 +4,7 @@ export async function fetchWeather() {
   try {
     let response = await fetch(`${import.meta.env.VITE_API_URL}/weather/get`);
 
-    const json = await response.json();
-
-    let data: Weather = json.data;
+    const data: Weather = await response.json();
 
     return data;
   } catch (error) {

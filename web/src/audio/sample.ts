@@ -8,11 +8,11 @@ export const sample = (preset: string) => {
 
   switch (preset) {
     case "fog":
-      params.sample = "/fog.mp3";
+      params.sample = "/weather/fog.mp3";
       params.volume = -4;
       break;
     case "summer-few-clouds":
-      params.sample = "/wind-chime.mp3";
+      params.sample = "/weather/wind-chime.mp3";
       params.volume = -15;
       break;
   }

@@ -6,8 +6,9 @@ Built with Nodejs and Vite.
 
 ## System Requirements
 
-- Node v20.10.0
-- Mariadb v10.3
+- Node v20.10.0 or higher
+- nodemon
+- ts-node
 
 ## Getting Started
 
@@ -16,6 +17,8 @@ To create a database container use docker in the project root:
 ```bash
 docker-compose up -d
 ```
+
+The database table `weather` will need to be created in the database. The structure of this can be figured out from the `databaseResult` type in the project. Alternatively reach out and I can provide a SQL dump.
 
 To start the server:
 

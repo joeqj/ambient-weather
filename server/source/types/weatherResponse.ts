@@ -42,6 +42,8 @@ export interface Main {
   temp_max: number;
   pressure: number;
   humidity: number;
+  sea_level: number;
+  grnd_level: number;
 }
 
 export interface Rain {
@@ -282,7 +284,9 @@ const typeMap: any = {
       { json: 'temp_min', js: 'temp_min', typ: 3.14 },
       { json: 'temp_max', js: 'temp_max', typ: 3.14 },
       { json: 'pressure', js: 'pressure', typ: 0 },
-      { json: 'humidity', js: 'humidity', typ: 0 }
+      { json: 'humidity', js: 'humidity', typ: 0 },
+      { json: "sea_level", js: "sea_level", typ: 0 },
+        { json: "grnd_level", js: "grnd_level", typ: 0 },
     ],
     false
   ),

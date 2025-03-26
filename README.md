@@ -46,6 +46,12 @@ npm install
 npm run dev
 ```
 
+You will need to specify the API url in a `.env` file in the web directory:
+
+```env
+VITE_API_URL=http://localhost:3333
+```
+
 ## Todo
 
 ### Server

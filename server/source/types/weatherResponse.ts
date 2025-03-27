@@ -286,7 +286,7 @@ const typeMap: any = {
       { json: 'pressure', js: 'pressure', typ: 0 },
       { json: 'humidity', js: 'humidity', typ: 0 },
       { json: "sea_level", js: "sea_level", typ: 0 },
-        { json: "grnd_level", js: "grnd_level", typ: 0 },
+      { json: "grnd_level", js: "grnd_level", typ: 0 },
     ],
     false
   ),

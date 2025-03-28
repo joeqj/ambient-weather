@@ -1,13 +1,13 @@
 import * as Tone from "tone";
 import type { Noise } from "tone";
 
-export const wind = (windSpeed: number) => {
+export const wind = (windSpeed: number, gustSpeed: number) => {
   // We dont want wind when there's barely any
-  if (windSpeed < 3) return;
+  if ((windSpeed + gustSpeed) < 3) return;
 
   const noise: Noise = new Tone.Noise("white");
   // Set the volume to be louder when it's windy
-  noise.volume.value = -30 + windSpeed;
+  noise.volume.value = -25 + (windSpeed + gustSpeed);
 
   const filter = new Tone.Filter({
     type: "lowpass",
@@ -17,7 +17,7 @@ export const wind = (windSpeed: number) => {
   });
 
   // We control frequency and resonance with LFOs tied to wind speed
-  let speed = 0.05 + windSpeed / 250;
+  let speed = 0.05 + (windSpeed * gustSpeed) / 250;
 
   const freqLFO = new Tone.LFO(speed, 0, 400 + windSpeed);
   freqLFO.connect(filter.frequency);

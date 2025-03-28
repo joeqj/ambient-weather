@@ -29,7 +29,7 @@ export const initAudio = async (data: Weather) => {
   chord(data.scale, data.chord, preset);
 
   sequence(data.scale, preset);
-  wind(data.windSpeed);
+  wind(data.windSpeed, data.gust);
   sample(preset);
 
   await Tone.start();

@@ -11,6 +11,6 @@ router.get('/update', controller.updateRecord);
   * Get live data from OpenWeather
   * Create a new record in the db
 */
-// router.get('/live', controller.getWeather);
+router.get('/live', controller.getWeather);
 
 export = router;

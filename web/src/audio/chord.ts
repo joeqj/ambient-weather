@@ -4,7 +4,8 @@ import { Chord, ScaleEntity } from "../types/fetch";
 export const chord = (
   data: ScaleEntity[] | null | undefined,
   chord: Chord,
-  preset: string
+  preset: string,
+  cloudCoverage: number
 ) => {
   if (!data && !chord) return;
 
@@ -20,6 +21,10 @@ export const chord = (
     volume: 0,
     cutoff: 300,
   };
+
+  if (cloudCoverage) {
+    params.cutoff = 200 * (1 - cloudCoverage / 100);
+  }
 
   switch (preset) {
     case "fog":
@@ -37,25 +42,19 @@ export const chord = (
     wet: 1,
   }).toDestination();
 
-  const autoWah = new Tone.AutoWah(400, 1, -30);
-
   const filter = new Tone.Filter({
     type: "bandpass",
     frequency: params.cutoff,
     rolloff: -12,
   });
 
-  const reverb = new Tone.Reverb({
-    decay: 1,
-    wet: 1,
-  });
-
   const sampler = new Tone.Sampler({
     urls: {
-      C3: "unison.mp3",
+      C3: "unison.ogg",
     },
     baseUrl: "/",
     volume: params.volume,
+
     attack: 4,
     release: 4,
 
@@ -67,12 +66,12 @@ export const chord = (
 
       let index = 0;
 
-      setInterval(() => {
-        sampler.triggerAttackRelease(padKeys, 5);
+      Tone.Transport.scheduleRepeat((time) => {
+        sampler.triggerAttackRelease(padKeys, 5, time);
         index += 1;
 
         if (index % 10 === 0) {
-          chordIndex += 1 % chords.length;
+          chordIndex = (chordIndex + 1) % chords.length;
 
           padKeys.length = 3;
 
@@ -83,9 +82,12 @@ export const chord = (
 
           console.log(`new ${chords[chordIndex].type} chord: ` + padKeys);
         }
-      }, 2000);
+      }, "2n");
+
+      // Start the Transport when the sampler is loaded
+      Tone.Transport.start();
     },
   });
 
-  sampler.chain(reverb, filter, autoWah, reverb2);
+  sampler.chain(filter, reverb2);
 };

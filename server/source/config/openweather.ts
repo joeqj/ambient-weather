@@ -27,7 +27,7 @@ const fetchWeather = async () =>
     }
 
     // OpenWeather API does not always return a gust object so we set it to always be present
-    if (!Object.hasOwnProperty.call(data, 'wind.gust')) {
+    if (!Object.hasOwnProperty.call(data.wind, 'gust')) {
       data.wind.gust = 0;
     }
 

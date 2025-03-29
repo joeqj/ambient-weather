@@ -15,6 +15,10 @@ export const sample = (preset: string) => {
       params.sample = "/weather/wind-chime.mp3";
       params.volume = -15;
       break;
+    case "light-rain":
+      params.sample = "/weather/rain-light.ogg";
+      params.volume = 0;
+      break;
   }
 
   if (!params.sample) return;

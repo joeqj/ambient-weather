@@ -64,26 +64,43 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
-const updateRecord = async () => {
+const updateRecord = async (req?: Request, res?: Response) => {
   logging.info(NAMESPACE, locale.updatingRecord);
 
-  const response = await fetchWeather();
+  try {
+    const response = await fetchWeather();
 
-  if (!response) return;
+    if (!response) return;
 
-  const data = formatData(response);
+    const data = formatData(response);
 
-  const date = new Date();
+    const date = new Date();
 
-  const object: DatabaseResult = {
-    id: null,
-    created_at: date.toISOString(),
-    ...data
-  };
+    const object: DatabaseResult = {
+      id: null,
+      created_at: date.toISOString(),
+      ...data
+    };
 
-  globalWeatherObject = object;
+    globalWeatherObject = object;
 
-  return globalWeatherObject;
+    logging.info(NAMESPACE, locale.updatingRecordSuccess);
+
+    if (res) {
+      return res.status(200).json({ globalWeatherObject });
+    } else {
+      return globalWeatherObject;
+    }
+
+  } catch (error: any) {
+    logging.error(NAMESPACE, error);
+
+    if (res) {
+      return res.status(500).json({ error: error.message });
+    } else {
+      return null;
+    }
+  }
 };
 
 const createRecord = async () => {

@@ -64,7 +64,7 @@ const getLatestRecord = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
-const updateRecord = async () => {
+const updateRecord = async (req?: Request, res?: Response) => {
   logging.info(NAMESPACE, locale.updatingRecord);
 
   try {
@@ -86,12 +86,20 @@ const updateRecord = async () => {
 
     logging.info(NAMESPACE, locale.updatingRecordSuccess);
 
-    return globalWeatherObject;
+    if (res) {
+      return res.status(200).json({ globalWeatherObject });
+    } else {
+      return globalWeatherObject;
+    }
 
   } catch (error: any) {
     logging.error(NAMESPACE, error);
 
-    return;
+    if (res) {
+      return res.status(500).json({ error: error.message });
+    } else {
+      return null;
+    }
   }
 };
 

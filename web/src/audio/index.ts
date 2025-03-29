@@ -17,6 +17,10 @@ export const initAudio = async (data: Weather) => {
     preset = "overcast";
   }
 
+  if (data.description == "light rain") {
+    preset = "light-rain";
+  }
+
   if (data.description == "broken clouds" || data.description == "few clouds") {
     if (data.temperature >= 18) {
       preset = "summer-few-clouds";
@@ -30,9 +34,10 @@ export const initAudio = async (data: Weather) => {
   sample(preset);
 
   Tone.setContext(new Tone.Context({ 
-    latencyHint : "playback",
-    lookAhead: 0.5
+    latencyHint : "interactive",
+    lookAhead: 15,
+    clockSource: "worker"
   }));
-  
+
   await Tone.start();
 };

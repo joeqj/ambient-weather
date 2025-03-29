@@ -22,15 +22,15 @@ export const chord = (
     cutoff: 300,
   };
 
+  if (cloudCoverage) {
+    params.cutoff = 200 * (1 - cloudCoverage / 100);
+  }
+
   switch (preset) {
     case "fog":
       params.volume = 50;
       params.cutoff = 0.5;
       break;
-  }
-
-  if (cloudCoverage) {
-    params.cutoff = 1000 * (1 - cloudCoverage / 50);
   }
 
   const padKeys: string[] = [];
@@ -50,7 +50,7 @@ export const chord = (
 
   const sampler = new Tone.Sampler({
     urls: {
-      C3: "unison.mp3",
+      C3: "unison.ogg",
     },
     baseUrl: "/",
     volume: params.volume,

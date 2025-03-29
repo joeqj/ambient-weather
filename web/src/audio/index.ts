@@ -1,8 +1,7 @@
 import * as Tone from "tone";
-import { wind } from "./wind";
 import { Weather } from "../types/fetch";
 import { chord } from "./chord";
-import { sequence } from "./sequence";
+import { wind } from "./wind";
 import { sample } from "./sample";
 
 export const initAudio = async (data: Weather) => {
@@ -26,11 +25,14 @@ export const initAudio = async (data: Weather) => {
     }
   }
 
-  chord(data.scale, data.chord, preset);
-
-  sequence(data.scale, preset);
+  chord(data.scale, data.chord, preset, data.cloudCoverage);
   wind(data.windSpeed, data.gust);
   sample(preset);
 
+  Tone.setContext(new Tone.Context({ 
+    latencyHint : "playback",
+    lookAhead: 0.5
+  }));
+  
   await Tone.start();
 };

@@ -7,7 +7,7 @@ export const wind = (windSpeed: number, gustSpeed: number) => {
 
   const noise: Noise = new Tone.Noise("white");
   // Set the volume to be louder when it's windy
-  noise.volume.value = -25 + (windSpeed + gustSpeed);
+  noise.volume.value = -30 + (windSpeed + gustSpeed);
 
   const filter = new Tone.Filter({
     type: "lowpass",
@@ -17,13 +17,13 @@ export const wind = (windSpeed: number, gustSpeed: number) => {
   });
 
   // We control frequency and resonance with LFOs tied to wind speed
-  let speed = 0.05 + (windSpeed * gustSpeed) / 250;
+  let speed = 0.05 + (windSpeed) / 250;
 
   const freqLFO = new Tone.LFO(speed, 0, 400 + windSpeed);
   freqLFO.connect(filter.frequency);
   freqLFO.start();
 
-  const resLFO = new Tone.LFO(speed, -4, 4 + windSpeed / 2);
+  const resLFO = new Tone.LFO(speed * 2, -4, 4 + windSpeed / 2);
   resLFO.connect(filter.Q);
   resLFO.start();
 
